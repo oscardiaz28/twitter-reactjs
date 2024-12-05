@@ -36,12 +36,14 @@ app.use(cookieParser())
 
 const __dirname = path.resolve()
 
+console.log(__dirname)
+
 app.use("/api/auth", authRoutes)
 app.use("/api/users", userRoutes)
 app.use("/api/posts", postRoutes)
 app.use("/api/notifications", notificationRoutes)
 
-if(process.env.NODE_ENV === "production"){
+if(true){
     app.use(express.static(path.join(__dirname, "/frontend/build")))
     app.get("*", (req, res) => {
         res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"))
