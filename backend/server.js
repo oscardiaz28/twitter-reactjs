@@ -4,6 +4,7 @@ import dotenv from 'dotenv'
 import connectDB from './config/db.js'
 import cookieParser from 'cookie-parser'
 import { v2 as cloudinary } from 'cloudinary'
+import path from 'path'
 
 import authRoutes from './routes/auth.routes.js'
 import userRoutes from './routes/user.routes.js'
@@ -33,11 +34,19 @@ app.use(express.urlencoded({extended: true}))
 
 app.use(cookieParser())
 
+const __dirname = path.resolve()
 
 app.use("/api/auth", authRoutes)
 app.use("/api/users", userRoutes)
 app.use("/api/posts", postRoutes)
 app.use("/api/notifications", notificationRoutes)
+
+if(process.env.NODE_ENV === "production"){
+    app.use(express.static(path.join(__dirname, "/frontend/build")))
+    app.get("*", (req, res) => {
+        res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"))
+    })
+}
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`)
